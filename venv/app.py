@@ -63,7 +63,7 @@ def avg_calories_per_fl_oz():
 
     # Request data from API for first chunk of results with appropriate query strings
     first_fifty = requests.get(
-        'https://api.nutritionix.com/v1_1/search/?brand_id=51db37d0176fe9790a899db2&results=0:50&cal_min=0&cal_max=50000&fields=item_name,nf_calories,nf_serving_size_qty,nf_serving_size_unit&appId=174401b5&appKey=a123b9aed02470ce919768e8ea96f9f7')
+        'https://api.nutritionix.com/v1_1/search/?brand_id=51db37d0176fe9790a899db2&results=0:50&cal_min=0&cal_max=50000&fields=item_name,nf_calories,nf_servings_per_container,nf_serving_size_qty,nf_serving_size_unit&appId=174401b5&appKey=a123b9aed02470ce919768e8ea96f9f7')
 
     # print(first_fifty)
 
@@ -81,7 +81,7 @@ def avg_calories_per_fl_oz():
     # ----------------------------------------- LAST FORTY -----------------------------------------
 
     last_forty = requests.get(
-        'https://api.nutritionix.com/v1_1/search/?brand_id=51db37d0176fe9790a899db2&results=50:100&cal_min=0&cal_max=50000&fields=item_name,nf_calories,nf_serving_size_qty,nf_serving_size_unit&appId=174401b5&appKey=a123b9aed02470ce919768e8ea96f9f7')
+        'https://api.nutritionix.com/v1_1/search/?brand_id=51db37d0176fe9790a899db2&results=50:100&cal_min=0&cal_max=50000&fields=item_name,nf_calories,nf_servings_per_container,nf_serving_size_qty,nf_serving_size_unit&appId=174401b5&appKey=a123b9aed02470ce919768e8ea96f9f7')
 
     # print(last_forty)
 
@@ -104,8 +104,8 @@ def avg_calories_per_fl_oz():
     # jsonified = json.dumps(joined_hit_list)
 
     # A response looks like:
-    # {"_index": "f762ef22-e660-434f-9071-a10ea6691c27", "_type": "item", "_id": "55592b2a61e715284d7ee8c2", "_score": 1,
-    # "fields": {"item_name": "Freezer Pops, Tropical Punch", "nf_calories": 35, "nf_serving_size_qty": 1, "nf_serving_size_unit": "pop"}
+    # {"_index": "f762ef22-e660-434f-9071-a10ea6691c27", "_type": "item", "_id": "55e66556771ae2d64c6d5424", "_score": 1,
+    #   "fields": {"item_name": "100% Juice, Orange Tangerine", "nf_calories": 130, "nf_serving_size_qty": 8, "nf_serving_size_unit": "fl oz"}
     # }
 
     # ----------------------------------------- FILTERING -------------------------------------------
@@ -121,5 +121,3 @@ def avg_calories_per_fl_oz():
             pass
 
     return json.dumps(filtered)
-    # ---------------------------
-
