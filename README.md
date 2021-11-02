@@ -16,6 +16,12 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+Activate virtual environment:
+
+```
+. venv/bin/activate
+```
+
 To navigate to the working project directory, use:
 
 ```
