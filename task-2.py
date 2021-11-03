@@ -11,6 +11,7 @@
 # Then get the average calories per fl oz of that collective list.
 # Return as a json string
 
+from flask import Flask, jsonify
 import requests
 import json
 
@@ -29,14 +30,11 @@ def avg_calories_per_fl_oz():
 
     json_response_one = first_fifty.json()
 
-    # print(json_response_one["hits"])
-    # This works for displaying first 50 as hits, but won't let us manipulate
-
     # hits_list_one = json.dumps(json_response_one["hits"])
-    # THIS RETURNS A STRING
+    # ^^ returns a string
 
     hits_list_one = json_response_one["hits"]
-    # THIS RETURNS A LIST
+    # ^^ returns a list
 
     # ----------------------------------------- LAST FORTY -----------------------------------------
 
@@ -47,21 +45,17 @@ def avg_calories_per_fl_oz():
 
     json_response_two = last_forty.json()
 
-    # print(json_response_two["hits"])
-    # This works for displaying last 40 as JSON, but won't let us manipulate
-
     # hits_list_two = json.dumps(json_response_two["hits"])
-    # THIS RETURNS A STRING
+    # ^^ returns a string
 
     hits_list_two = json_response_two["hits"]
-    # THIS RETURNS A LIST
+    # ^^ returns a list
 
     # ----------------------------------------- JOINING LISTS -----------------------------------------
 
     joined_hit_list = hits_list_one + hits_list_two
-    # Concatonating two strings. A string disguised as a list.
+    # Concatenating two strings. A string disguised as a list.
     # print(joined_hit_list)
-    # jsonified = json.dumps(joined_hit_list)
 
     # A response looks like:
     # {"_index": "f762ef22-e660-434f-9071-a10ea6691c27", "_type": "item", "_id": "55e66556771ae2d64c6d5424", "_score": 1,
@@ -70,23 +64,23 @@ def avg_calories_per_fl_oz():
 
     # ----------------------------------------- FILTERING -------------------------------------------
 
-    filtered = []
+    liquid_products = []
+    # !!! This list only accounts for products with "fl oz" as it's serving size unit.
 
     liquids = 'fl oz'
 
     for product in joined_hit_list:
         if liquids in product['fields'].values():
-            filtered.append(product)
+            liquid_products.append(product)
         else:
             pass
 
-    # return json.dumps(filtered)
+    # return json.dumps(liquid_products)
 
     # ----------------------------------------- AVERAGING -------------------------------------------
 
-    # dictionary values are stored as strings instead of integers, which means that to perform any kind of mathematical operation on them, you must convert them to an integer and back to a string.
-
-    calories_list = []
+    # Formula for calories per oz in a given product:
+    # cal_per_oz = (nf_calories * nf_servings_per_container) / (nf_serving_size_qty * nf_servings_per_container)
 
     def calculate_calories(nf_calories, nf_servings_per_container, nf_serving_size_qty):
         return (
@@ -94,29 +88,20 @@ def avg_calories_per_fl_oz():
             ((int(nf_serving_size_qty)) * (int(nf_servings_per_container)))
         )
 
-    for product in filtered:
-        attributes = product['fields'].items()
-        # Returns tuples in a list. tuples are immutable.
-        # int('nf_calories') * int('nf_servings_per_container')) / (int('nf_serving_size_qty') * int('nf_servings_per_container'))
-        for attribute in attributes:
-            if 'nf_calories' in attribute.keys():
-                calories = attribute['nf_calories'].values()
-            if 'nf_servings_per_container' in attribute.keys():
-                servings_per_container = attribute['nf_servings_per_container'].values(
-                )
-            if 'nf_serving_size_qty' in attribute.keys():
-                serving_size_qty = attribute['nf_serving_size_qty'].values()
+    calories_list = []
 
-            calories_per_oz = calculate_calories(
-                calories, servings_per_container, serving_size_qty)
+    for product in liquid_products:
+        calories_per_oz = calculate_calories(
+            product['fields']['nf_calories'], product['fields']['nf_servings_per_container'], product['fields']['nf_serving_size_qty'])
+        calories_list.append(calories_per_oz)
+        # print(calories_list)
 
-            # calories_per_oz = calculate_calories(
-            #     int(attribute['nf_calories'].values()), int(attribute['nf_servings_per_container'].values()), int(attribute['nf_servings_per_container'].values()))
+    num_of_filtered_products = len(liquid_products)
+    total_calories = sum(calories_list)
 
-            calories_list.append(calories_per_oz)
-        print(calories_list)
+    average_calories_per_fl_oz = round(
+        (total_calories / num_of_filtered_products), 2)
 
-    # Formula for calories per oz in a given product:
-    # cal_per_oz = (nf_calories * nf_servings_per_container) / (nf_serving_size_qty * nf_servings_per_container)
-
-    return json.dumps(calories_list)
+    # return json.dumps(sum(calories_list))
+    # return json.dumps(average_calories_per_fl_oz)
+    return jsonify(average_calories_per_fl_oz=average_calories_per_fl_oz)
