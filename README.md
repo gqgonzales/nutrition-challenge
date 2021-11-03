@@ -22,12 +22,6 @@ Activate virtual environment:
 . venv/bin/activate
 ```
 
-To navigate to the working project directory, use:
-
-```
-cd venv
-```
-
 To initialize the app after installing required dependencies, use:
 
 ```

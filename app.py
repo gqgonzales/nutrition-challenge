@@ -10,28 +10,6 @@ def nutrition():
     return "<p> Code Challenge for Juice Analytics </p> <a href=/get_total_hits> Return total hits</a><br></br><a href=/avg_calories>Averge Calories per fl oz</a>"
 
 
-@app.route("/loop")
-def loop():
-    try:
-        # Initialize a employee list
-        employeeList = []
-
-        # create a instances for filling up employee list
-        for i in range(0, 2):
-            empDict = {
-                'firstName': 'Roy',
-                'lastName': 'Augustine'}
-            employeeList.append(empDict)
-
-            # convert to json data
-            jsonStr = json.dumps(employeeList)
-
-    except Exception:
-        pass
-
-    return jsonify(Employees=jsonStr)
-
-
 @app.route("/get_total_hits")
 def get_total_hits():
     response = requests.get(
@@ -40,20 +18,14 @@ def get_total_hits():
     jsonResponse = response.json()
 
     hits_response = jsonResponse['total_hits']
-    # This returns just the value 90
+    # Accessing the key with total_hits. This returns the value 90
 
-    # dict_pairs = jsonResponse.items()
-    # pairs_iterator = iter(dict_pairs)
-    # total_hits = next(pairs_iterator)
-    # This works for returning a list with a single key:value pair!
+    return jsonify(total_hits=hits_response)
+    # This returns a JSON verison
 
-    jsonStr = json.dumps(hits_response)
-
-    return jsonify(total_hits=jsonStr)
-    # This returns an ugly verison
-
+    # jsonStr = json.dumps(hits_response)
     # return "total_hits: " + jsonStr
-    # Human readable version
+    # More readable version
 
 
 @app.route("/avg_calories")
@@ -69,14 +41,11 @@ def avg_calories_per_fl_oz():
 
     json_response_one = first_fifty.json()
 
-    # print(json_response_one["hits"])
-    # This works for displaying first 50 as hits, but won't let us manipulate
-
     # hits_list_one = json.dumps(json_response_one["hits"])
-    # THIS RETURNS A STRING
+    # ^^ returns a string
 
     hits_list_one = json_response_one["hits"]
-    # THIS RETURNS A LIST
+    # ^^ returns a list
 
     # ----------------------------------------- LAST FORTY -----------------------------------------
 
@@ -87,21 +56,17 @@ def avg_calories_per_fl_oz():
 
     json_response_two = last_forty.json()
 
-    # print(json_response_two["hits"])
-    # This works for displaying last 40 as JSON, but won't let us manipulate
-
     # hits_list_two = json.dumps(json_response_two["hits"])
-    # THIS RETURNS A STRING
+    # ^^ returns a string
 
     hits_list_two = json_response_two["hits"]
-    # THIS RETURNS A LIST
+    # ^^ returns a list
 
     # ----------------------------------------- JOINING LISTS -----------------------------------------
 
     joined_hit_list = hits_list_one + hits_list_two
-    # Concatonating two strings. A string disguised as a list.
+    # Concatenating two strings. A string disguised as a list.
     # print(joined_hit_list)
-    # jsonified = json.dumps(joined_hit_list)
 
     # A response looks like:
     # {"_index": "f762ef22-e660-434f-9071-a10ea6691c27", "_type": "item", "_id": "55e66556771ae2d64c6d5424", "_score": 1,
@@ -110,14 +75,44 @@ def avg_calories_per_fl_oz():
 
     # ----------------------------------------- FILTERING -------------------------------------------
 
-    filtered = []
+    liquid_products = []
+    # !!! This list only accounts for products with "fl oz" as it's serving size unit.
 
     liquids = 'fl oz'
 
     for product in joined_hit_list:
         if liquids in product['fields'].values():
-            filtered.append(product)
+            liquid_products.append(product)
         else:
             pass
 
-    return json.dumps(filtered)
+    # return json.dumps(liquid_products)
+
+    # ----------------------------------------- AVERAGING -------------------------------------------
+
+    # Formula for calories per oz in a given product:
+    # cal_per_oz = (nf_calories * nf_servings_per_container) / (nf_serving_size_qty * nf_servings_per_container)
+
+    def calculate_calories(nf_calories, nf_servings_per_container, nf_serving_size_qty):
+        return (
+            ((int(nf_calories)) * (int(nf_servings_per_container))) /
+            ((int(nf_serving_size_qty)) * (int(nf_servings_per_container)))
+        )
+
+    calories_list = []
+
+    for product in liquid_products:
+        calories_per_oz = calculate_calories(
+            product['fields']['nf_calories'], product['fields']['nf_servings_per_container'], product['fields']['nf_serving_size_qty'])
+        calories_list.append(calories_per_oz)
+        # print(calories_list)
+
+    num_of_filtered_products = len(liquid_products)
+    total_calories = sum(calories_list)
+
+    average_calories_per_fl_oz = round(
+        (total_calories / num_of_filtered_products), 2)
+
+    # return json.dumps(sum(calories_list))
+    # return json.dumps(average_calories_per_fl_oz)
+    return jsonify(average_calories_per_fl_oz=average_calories_per_fl_oz)
