@@ -10,6 +10,11 @@ Clone this repository:
 git clone git@github.com:gqgonzales/nutrition-challenge.git
 ```
 
+Install pip:
+```
+python get-pip.py
+```
+
 Install dependencies:
 
 ```
