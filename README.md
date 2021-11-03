@@ -16,10 +16,10 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-To navigate to the working project directory, use:
+Activate virtual environment:
 
 ```
-cd venv
+. venv/bin/activate
 ```
 
 To initialize the app after installing required dependencies, use:
