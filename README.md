@@ -1,6 +1,6 @@
 # nutrition-challenge
 
-Flask Python project for data storytelling! Utilizes data from the nutritionix API.
+Flask Python project for data storytelling! Utilizes data from the [nutritionix API](https://developer.nutritionix.com/).
 
 ### Getting Started
 
