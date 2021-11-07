@@ -13,14 +13,9 @@ print(response)
 
 jsonResponse = response.json()
 
-final = jsonResponse['total_hits']
-
-dict_pairs = jsonResponse.items()
-pairs_iterator = iter(dict_pairs)
-total_hits = next(pairs_iterator)
-
+final = {"total_hits": jsonResponse['total_hits']}
 
 with open('task-1-solution.json', 'w') as f:
-    json.dump((total_hits), f)
+    json.dump((final), f)
 
 # This solutuion generates a new file with that list json-ified.
