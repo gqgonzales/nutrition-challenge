@@ -116,3 +116,16 @@ def avg_calories_per_fl_oz():
     # return json.dumps(sum(calories_list))
     # return json.dumps(average_calories_per_fl_oz)
     return jsonify(average_calories_per_fl_oz=average_calories_per_fl_oz)
+
+
+# @app.route("/ingredients")
+# def generate_csv_file(file_df):
+#     # Create an o/p buffer
+#     file_buffer = StringIO()
+
+#     # Write the dataframe to the buffer
+#     file_df.to_csv(file_buffer, encoding="utf-8", index=False, sep=",")
+
+#     # Seek to the beginning of the stream
+#     file_buffer.seek(0)
+#     return file_buffer
