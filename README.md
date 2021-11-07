@@ -1,6 +1,6 @@
 # nutrition-challenge
 
-Flask Python project for data storytelling! Utilizes data from the nutritionix API.
+Flask Python project for data storytelling! Utilizes data from the [nutritionix API](https://developer.nutritionix.com/).
 
 ### Getting Started
 
@@ -8,6 +8,11 @@ Clone this repository:
 
 ```
 git clone git@github.com:gqgonzales/nutrition-challenge.git
+```
+
+Install pip:
+```
+python get-pip.py
 ```
 
 Install dependencies:
