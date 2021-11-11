@@ -1,6 +1,7 @@
 # nutrition-challenge
 
 Flask Python project for data storytelling! Utilizes data from the [nutritionix API](https://developer.nutritionix.com/).
+To see a sample Juicebox app, [click here](https://465-nifty-pineapples.myjuicebox.io/a/mpg_report/).
 
 ### Getting Started
 
