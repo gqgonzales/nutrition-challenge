@@ -39,3 +39,9 @@ To run the applicaiton on a local server, use:
 ```
 flask run
 ```
+
+To complete a task and export as JSON, use:
+
+```
+python task-number.py
+```
